@@ -1,0 +1,10 @@
+Primero, pensamos en cómo hacer la matriz de LEDS sin usar más de 7 pines digitales, primero empezamos a mirar
+con una matriz pequeña, cómo podríamos hacer las conexiones correctas, e intentamos conectar cada fila por medio
+de los ánodos y cada columna por medio de los cátodos (como se ve en la imagen Matriz de LEDS) ayudándonos de la
+protoboard, y así tener el control sobre cada fila y cada columna (como se ve en la imagen Matriz de LEDS2), pero 
+nos dimos cuenta de que así no funcionaría para hacer los patrones debido a que no teníamos control sobre cada 
+LED individual sino sobre cada fila o columna de LEDS, pero este método sirvió de base para hacer el método
+que está definido ahora. Luego de investigar sobre el 74HC595, vimos que este nos sirve bastante por como está
+hecho y como funciona, al ser un registro de desplazamiento de 8 bits, justo de 8 LEDS seria cada fila y 
+cada columna, por lo que usamos dos 74HC595, uno para controlar cuál columna se ilumina y otro para controlar
+qué filas de cada columna se ilumina, así teniendo el control sobre cada led.
