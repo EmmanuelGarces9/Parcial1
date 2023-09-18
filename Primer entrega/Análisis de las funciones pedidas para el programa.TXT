@@ -1,0 +1,19 @@
+Para la solución de estas tareas, creamos las funciones writeX y writeY, para controlar las filas y columnas de la matriz.
+Función WriteY(Control de Filas): Esta función es responsable de escribir un byte en el registro de desplazamiento conectado
+a las filas.Itera a través de los bits y envía los datos a través de digitalWrite y pulse para controlar las filas.
+
+Función WriteX(Control de Columnas):Esta función se encarga de escribir un byte en el registro de desplazamiento conectado 
+a las columnas.Antes de enviar los datos, invierte los bits para ajustarse a la lógica de la matriz de LEDs.
+
+
+Para la verificación: se tiene pensado en usar las funciones de writeX y writeY, para prender todas las filas y todas las
+columnas y luego apagarlas, y hacer esto varias veces para la verificación de todos los leds como se dice en el enunciado, 
+en nuestro caso lo haremos 7 veces (solo porque creemos que 7 veces es suficiente para la comprobación) con ayuda de una 
+variable temporal y un ciclo simple, ahora dentro de ese ciclo hacemos un ciclo for para que se prendan todas las filas 
+y todas las columnas y otro ciclo for para que se apaguen todas las filas y todas las columnas y con un delay de 1 segundo 
+para que se pueda apreciar como se prenden y apagan.
+
+(Para la imagen, este analisis ya está hecho en: el pdf analisis.pdf y en el pdf de diagrama de flujo.pdf)
+
+Para mostrar patrones: Aquí vamos a hacer algoritmos para cada uno de los patrones y usar las funciones writeX y writeY,
+dependiendo de cada algoritmo, para mostrar filas y columnas deseadas en cada patrón.
