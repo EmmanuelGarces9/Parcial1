@@ -5,8 +5,11 @@ int CLKY = 7;
 int CLKX = 13;
 char opcion = 0;
 bool mostrarMenu = true;
+unsigned long tiempoInicial;
+unsigned long duracionDeseada = 1000;
 
-unsigned char LED[8] = { 1, 2, 4, 8, 16, 32, 64, 128};
+
+unsigned char LED[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
 unsigned char data[8] = {0,
                          24,
@@ -45,7 +48,7 @@ void publik(char opcion) {
         //Imagen();
         break;
       case '3':
-        //MostrarPatrones();
+      	patron1();
         break;
       default:
         break;
@@ -54,9 +57,9 @@ void publik(char opcion) {
 
 void verificacion() {
   Serial.println("iniciando verificacion:");
-  int temp=0;
-  if (opcion='1'){
-        while(temp<7){
+  if (opcion=='1'){
+    int temp=0;
+    while(temp<7){
       for (int f = 0; f < 8; f++) {
       digitalWrite(LATCH, LOW);
       writeX(LED[f]);  
@@ -72,11 +75,10 @@ void verificacion() {
       }
       temp++;
   }
-    
-  }
-
   Serial.println("finalizando verificacion:");
+  }
 }
+
 
 void setup() {
   pinMode(inputy, OUTPUT);
@@ -92,7 +94,7 @@ void setup() {
   digitalWrite(CLKX, LOW);
   
   Serial.begin(9600);
-}
+  }
 
 void loop() {
   if (mostrarMenu) {
@@ -115,5 +117,39 @@ void loop() {
     }
   }
 }
-
-
+void patron1(){
+ 	tiempoInicial = millis();
+    while (true){
+       unsigned long tiempoActual = millis();
+    	unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
+        if (tiempoTranscurrido<duracionDeseada){
+            int n=0;
+            unsigned char filas1[8] = {};
+            unsigned char fila = 255;
+            for(int i = 6; i >= 0; i-=2, fila = 255) {
+                fila = (fila >> i) << (i/2);
+                filas1[n++]=fila;
+            }
+            for(int i = 0; i <= 6; i+=2, fila = 255) {
+                fila = (fila >> i) << (i/2);
+                filas1[n++]=fila;
+            }
+            for (int x = 0; x < 8; x++) {
+                digitalWrite(LATCH, LOW);
+                writeX(LED[x]);
+                writeY(filas1[x]);
+                digitalWrite(LATCH, HIGH);
+            }
+        }else{
+          		digitalWrite(LATCH, LOW);
+                writeX(0);
+                writeY(0);
+                digitalWrite(LATCH, HIGH);
+          		break;
+        }
+    }
+    digitalWrite(LATCH, LOW);
+    writeX(0);
+    writeY(0);
+    digitalWrite(LATCH, HIGH);
+}
