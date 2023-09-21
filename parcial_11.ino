@@ -11,6 +11,18 @@ unsigned long duracionDeseada = 1000;
 
 unsigned char LED[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
+<<<<<<< HEAD
+=======
+unsigned char data[8] = {0,
+                         24,
+                         60,
+                         126,
+                         255,
+                         231,
+                         195,
+  						 129};
+
+>>>>>>> 98dbb0538b54787eb492d12bbe804eee229a0933
 void pulse(int pin) {
   digitalWrite(pin, LOW);
   digitalWrite(pin, HIGH);
@@ -40,8 +52,11 @@ void publik(char opcion) {
         break;
       case '3':
       	patron1();
+<<<<<<< HEAD
       	delay(500);
       	patron2();
+=======
+>>>>>>> 98dbb0538b54787eb492d12bbe804eee229a0933
         break;
       default:
         break;
@@ -146,6 +161,7 @@ void patron1(){
     writeY(0);
     digitalWrite(LATCH, HIGH);
 }
+<<<<<<< HEAD
 
 void patron2(){
   tiempoInicial = millis();
@@ -179,3 +195,5 @@ void patron2(){
       	}
      }
 }
+=======
+>>>>>>> 98dbb0538b54787eb492d12bbe804eee229a0933
