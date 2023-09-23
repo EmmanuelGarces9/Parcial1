@@ -6,10 +6,13 @@ int CLKX = 13;
 char opcion = 0;
 bool mostrarMenu = true;
 unsigned long tiempoInicial;
-unsigned long duracionDeseada = 1000;
+unsigned long duracionDeseada = 500;
+unsigned long duracionImagen;
 
 
 unsigned char LED[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+
+unsigned char *Filas= new unsigned char[8];
 
 void pulse(int pin) {
   digitalWrite(pin, LOW);
@@ -36,7 +39,6 @@ void publik(char opcion) {
       	verificacion();
         break;
       case '2':
-        //Imagen();
         break;
       case '3':
       	patron1();
@@ -44,6 +46,8 @@ void publik(char opcion) {
       	patron2();
       	delay(500);
       	patron3();
+      	delay(500);
+      	patron4();
         break;
       default:
         break;
@@ -70,7 +74,8 @@ void verificacion() {
       }
       temp++;
   }
-  Serial.println("finalizando verificacion:");
+  Serial.println("finalizando verificacion");
+  delete[] Filas;
   }
 }
 
@@ -113,26 +118,26 @@ void loop() {
   }
 }
 void patron1(){
+  	unsigned char *Filas= new unsigned char[8];
  	tiempoInicial = millis();
     while (true){
        unsigned long tiempoActual = millis();
     	unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
         if (tiempoTranscurrido<duracionDeseada){
             int n=0;
-            unsigned char filas1[8] = {};
             unsigned char fila = 255;
             for(int i = 6; i >= 0; i-=2, fila = 255) {
                 fila = (fila >> i) << (i/2);
-                filas1[n++]=fila;
+                Filas[n++]=fila;
             }
             for(int i = 0; i <= 6; i+=2, fila = 255) {
                 fila = (fila >> i) << (i/2);
-                filas1[n++]=fila;
+                Filas[n++]=fila;
             }
             for (int x = 0; x < 8; x++) {
                 digitalWrite(LATCH, LOW);
                 writeX(LED[x]);
-                writeY(filas1[x]);
+                writeY(Filas[x]);
                 digitalWrite(LATCH, HIGH);
             }
         }else{
@@ -147,9 +152,11 @@ void patron1(){
     writeX(0);
     writeY(0);
     digitalWrite(LATCH, HIGH);
+  	delete[] Filas;
 }
 
 void patron2(){
+  unsigned char *Filas= new unsigned char[8];
   tiempoInicial = millis();
   digitalWrite(LATCH, LOW);
   writeX(0);
@@ -160,10 +167,9 @@ void patron2(){
       unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
       if (tiempoTranscurrido<duracionDeseada){
         int n = 0;
-        unsigned char Filas[8] = {};
         for (int i = 0; i < 8; i++) {
           unsigned char fila = 0;
-          fila = (1 << i) | (1 << (7 - i));
+          fila = (1 << i) | (1 << (7 - i));  // Enciende los bits correspondientes en la fila
           Filas[n++] = fila;
         }
         for (int x = 0; x < 8; x++) {
@@ -177,6 +183,7 @@ void patron2(){
         writeX(0);
         writeY(0);
         digitalWrite(LATCH, HIGH);
+        delete[] Filas;
         break;
       	}
      }
@@ -194,7 +201,6 @@ void patron3(){
       unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
       if (tiempoTranscurrido<duracionDeseada){
         int n = 0;
-        unsigned char Filas[8] = {};
         short int desp=0;
 
         for (int i = 0; i < 8; i++) {
@@ -220,7 +226,46 @@ void patron3(){
         writeX(0);
         writeY(0);
         digitalWrite(LATCH, HIGH);
+        delete[] Filas;
         break;
       	}
+     }
+}
+
+void patron4(){
+  unsigned char *Filas= new unsigned char[8];
+  tiempoInicial = millis();
+  digitalWrite(LATCH, LOW);
+  writeX(0);
+  writeY(0);
+  digitalWrite(LATCH, HIGH);
+  while (true){
+      unsigned long tiempoActual = millis();
+      unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
+      if (tiempoTranscurrido<duracionDeseada){
+          int n=0;
+          unsigned char fila = 240;
+          for(int i = 0; i < 4; i++, fila = 240) {
+              fila = fila >> i;
+              Filas[n++]=fila;
+          }
+          for(int i = 3; i >= 0; i--, fila = 240) {
+              fila = fila >> i;
+              Filas[n++]=fila;
+          }
+          for (int x = 0; x < 8; x++) {
+               digitalWrite(LATCH, LOW);
+                writeX(Filas[x]);
+                writeY(LED[x]);
+                digitalWrite(LATCH, HIGH);
+           } 
+      }else{
+          		digitalWrite(LATCH, LOW);
+                writeX(0);
+                writeY(0);
+                digitalWrite(LATCH, HIGH);
+        		delete[] Filas;
+          		break;
+           }
      }
 }
