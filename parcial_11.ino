@@ -8,8 +8,12 @@ bool mostrarMenu = true;
 unsigned long tiempoInicial;
 unsigned long duracionDeseada = 500;
 unsigned long duracionImagen;
+<<<<<<< HEAD
 unsigned long secuencias;
 unsigned long tiempo1;
+=======
+
+>>>>>>> 8f59401dd0e9e9ab764b09e169c74d582a7bd152
 
 unsigned char LED[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
@@ -40,7 +44,10 @@ void publik(char opcion) {
       	verificacion();
         break;
       case '2':
+<<<<<<< HEAD
         Imagen();
+=======
+>>>>>>> 8f59401dd0e9e9ab764b09e169c74d582a7bd152
         break;
       case '3':
       	patron1();
@@ -89,8 +96,16 @@ void verificacion() {
             	break;
           } 
       }
+<<<<<<< HEAD
   	}
   	Serial.println("finalizando verificacion");
+=======
+      temp++;
+  }
+  Serial.println("finalizando verificacion");
+  delete[] Filas;
+  }
+>>>>>>> 8f59401dd0e9e9ab764b09e169c74d582a7bd152
 }
 
 void setup() {
@@ -264,7 +279,11 @@ void patron4(){
           }
           for(int i = 3; i >= 0; i--, fila = 240) {
               fila = fila >> i;
+<<<<<<< HEAD
             Filas[n++]=fila;
+=======
+              Filas[n++]=fila;
+>>>>>>> 8f59401dd0e9e9ab764b09e169c74d582a7bd152
           }
           for (int x = 0; x < 8; x++) {
                digitalWrite(LATCH, LOW);
@@ -281,6 +300,7 @@ void patron4(){
           		break;
            }
      }
+<<<<<<< HEAD
 }
 
 void Imagen() {
@@ -351,4 +371,6 @@ void convertToChar(unsigned short int** input, unsigned char *Filas){
         }
     Filas[fila] = char(valorChar);
   }
+=======
+>>>>>>> 8f59401dd0e9e9ab764b09e169c74d582a7bd152
 }
