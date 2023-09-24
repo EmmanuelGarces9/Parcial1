@@ -6,23 +6,15 @@ int CLKX = 13;
 char opcion = 0;
 bool mostrarMenu = true;
 unsigned long tiempoInicial;
-unsigned long duracionDeseada = 1000;
-
+unsigned long duracionDeseada = 500;
+unsigned long duracionImagen;
+unsigned long secuencias;
+unsigned long tiempo1;
 
 unsigned char LED[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
-<<<<<<< HEAD
-=======
-unsigned char data[8] = {0,
-                         24,
-                         60,
-                         126,
-                         255,
-                         231,
-                         195,
-  						 129};
+unsigned char *Filas= new unsigned char[8];
 
->>>>>>> 98dbb0538b54787eb492d12bbe804eee229a0933
 void pulse(int pin) {
   digitalWrite(pin, LOW);
   digitalWrite(pin, HIGH);
@@ -48,15 +40,16 @@ void publik(char opcion) {
       	verificacion();
         break;
       case '2':
-        //Imagen();
+        Imagen();
         break;
       case '3':
       	patron1();
-<<<<<<< HEAD
       	delay(500);
       	patron2();
-=======
->>>>>>> 98dbb0538b54787eb492d12bbe804eee229a0933
+      	delay(500);
+      	patron3();
+      	delay(500);
+      	patron4();
         break;
       default:
         break;
@@ -64,29 +57,41 @@ void publik(char opcion) {
 }
 
 void verificacion() {
-  Serial.println("iniciando verificacion:");
-  if (opcion=='1'){
+    Serial.println("indique el numero de secuencias: ");
+    while (!Serial.available()) {}
+    secuencias=Serial.parseInt();
+    Serial.print(secuencias);
+    Serial.println(" secuencias..");
+    Serial.println("Ingrese el tiempo entre encendido y apagado: ");
+    while (!Serial.available()) {}
+    tiempo1=Serial.parseInt()*1000;
+    Serial.println("iniciando verificacion:");
     int temp=0;
-    while(temp<7){
-      for (int f = 0; f < 8; f++) {
-      digitalWrite(LATCH, LOW);
-      writeX(LED[f]);  
-      writeY(255);  
-      digitalWrite(LATCH, HIGH);
-    }
-      for(int o=0;o<8;o++){
-        digitalWrite(LATCH, LOW);
-        writeX(0);
-        writeY(0);
-		digitalWrite(LATCH, HIGH);
-        delay(100);
+  	while(temp<secuencias){
+      tiempoInicial = millis();
+      while (true){
+        	unsigned long tiempoActual = millis();
+          unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
+          if (tiempoTranscurrido<duracionDeseada){
+            for (int f = 0; f < 8; f++) {
+              digitalWrite(LATCH, LOW);
+              writeX(LED[f]);  
+              writeY(255);
+              digitalWrite(LATCH, HIGH);
+            }
+          }else{
+              digitalWrite(LATCH, LOW);
+              writeX(0);
+              writeY(0);
+              digitalWrite(LATCH, HIGH);
+              delay(tiempo1);
+            	temp++;
+            	break;
+          } 
       }
-      temp++;
-  }
-  Serial.println("finalizando verificacion:");
-  }
+  	}
+  	Serial.println("finalizando verificacion");
 }
-
 
 void setup() {
   pinMode(inputy, OUTPUT);
@@ -126,26 +131,26 @@ void loop() {
   }
 }
 void patron1(){
+  	unsigned char *Filas= new unsigned char[8];
  	tiempoInicial = millis();
     while (true){
        unsigned long tiempoActual = millis();
     	unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
         if (tiempoTranscurrido<duracionDeseada){
             int n=0;
-            unsigned char filas1[8] = {};
             unsigned char fila = 255;
             for(int i = 6; i >= 0; i-=2, fila = 255) {
                 fila = (fila >> i) << (i/2);
-                filas1[n++]=fila;
+                Filas[n++]=fila;
             }
             for(int i = 0; i <= 6; i+=2, fila = 255) {
                 fila = (fila >> i) << (i/2);
-                filas1[n++]=fila;
+                Filas[n++]=fila;
             }
             for (int x = 0; x < 8; x++) {
                 digitalWrite(LATCH, LOW);
                 writeX(LED[x]);
-                writeY(filas1[x]);
+                writeY(Filas[x]);
                 digitalWrite(LATCH, HIGH);
             }
         }else{
@@ -160,10 +165,11 @@ void patron1(){
     writeX(0);
     writeY(0);
     digitalWrite(LATCH, HIGH);
+  	delete[] Filas;
 }
-<<<<<<< HEAD
 
 void patron2(){
+  unsigned char *Filas= new unsigned char[8];
   tiempoInicial = millis();
   digitalWrite(LATCH, LOW);
   writeX(0);
@@ -174,10 +180,9 @@ void patron2(){
       unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
       if (tiempoTranscurrido<duracionDeseada){
         int n = 0;
-        unsigned char Filas[8] = {};
         for (int i = 0; i < 8; i++) {
           unsigned char fila = 0;
-          fila = (1 << i) | (1 << (7 - i));
+          fila = (1 << i) | (1 << (7 - i));  // Enciende los bits correspondientes en la fila
           Filas[n++] = fila;
         }
         for (int x = 0; x < 8; x++) {
@@ -191,9 +196,159 @@ void patron2(){
         writeX(0);
         writeY(0);
         digitalWrite(LATCH, HIGH);
+        delete[] Filas;
         break;
       	}
      }
 }
-=======
->>>>>>> 98dbb0538b54787eb492d12bbe804eee229a0933
+
+void patron3(){
+  unsigned char *Filas= new unsigned char[8];
+  tiempoInicial = millis();
+  digitalWrite(LATCH, LOW);
+  writeX(0);
+  writeY(0);
+  digitalWrite(LATCH, HIGH);
+  while (true){
+      unsigned long tiempoActual = millis();
+      unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
+      if (tiempoTranscurrido<duracionDeseada){
+        int n = 0;
+        short int desp=0;
+
+        for (int i = 0; i < 8; i++) {
+          unsigned char fila = 0;
+          if (i %3 ==0) {
+            fila = 255;
+            desp=0;
+          } else {
+            fila = 204>>desp;
+            desp+=2;
+          }
+          Filas[n++] = fila;
+        }
+
+        for (int x = 0; x < 8; x++) {
+          digitalWrite(LATCH, LOW);
+          writeX(LED[x]);
+          writeY(Filas[x]);
+          digitalWrite(LATCH, HIGH);
+        }
+      }else{
+        digitalWrite(LATCH, LOW);
+        writeX(0);
+        writeY(0);
+        digitalWrite(LATCH, HIGH);
+        delete[] Filas;
+        break;
+      	}
+     }
+}
+
+void patron4(){
+  unsigned char *Filas= new unsigned char[8];
+  tiempoInicial = millis();
+  digitalWrite(LATCH, LOW);
+  writeX(0);
+  writeY(0);
+  digitalWrite(LATCH, HIGH);
+  while (true){
+      unsigned long tiempoActual = millis();
+      unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
+      if (tiempoTranscurrido<duracionDeseada){
+          int n=0;
+          unsigned char fila = 240;
+          for(int i = 0; i < 4; i++, fila = 240) {
+              fila = fila >> i;
+              Filas[n++]=fila;
+          }
+          for(int i = 3; i >= 0; i--, fila = 240) {
+              fila = fila >> i;
+            Filas[n++]=fila;
+          }
+          for (int x = 0; x < 8; x++) {
+               digitalWrite(LATCH, LOW);
+                writeX(Filas[x]);
+                writeY(LED[x]);
+                digitalWrite(LATCH, HIGH);
+           } 
+      }else{
+          		digitalWrite(LATCH, LOW);
+                writeX(0);
+                writeY(0);
+                digitalWrite(LATCH, HIGH);
+        		delete[] Filas;
+          		break;
+           }
+     }
+}
+
+void Imagen() {
+  	Serial.println("Ingrese duracion del patron:");
+  	while (!Serial.available()) {}
+  	duracionImagen=Serial.parseInt()*100;
+  	Serial.print("Se mostrara: ");
+  	Serial.print(duracionImagen/100);
+  	Serial.println(" segundos");
+  	unsigned char *Filas= new unsigned char[8];
+  	unsigned short int** input = new unsigned short int*[8];
+    for (int i = 0; i < 8; i++) {
+      input[i] = new unsigned short int[8];
+    }
+  	Serial.println("Ingrese columnas de derecha a izquierda:");
+    for (int fila = 0; fila < 8; fila++) {
+      for (int columna = 0; columna < 8; columna++) {
+        while (!Serial.available()) {}
+          char valorLeido = Serial.read();
+          int valorEntero = valorLeido - '0';
+          input[fila][columna] = valorEntero;
+          Serial.print(input[fila][columna]);
+      }Serial.println();
+    }
+  tiempoInicial = millis();
+  
+  while (true){
+      unsigned long tiempoActual = millis();
+	  unsigned long tiempoTranscurrido = tiempoActual - tiempoInicial;
+      convertToChar(input,Filas);
+      unsigned long cont=0;
+      while (tiempoTranscurrido<duracionImagen){
+        for (int x = 0; x < 8; x++) {
+               	digitalWrite(LATCH, LOW);
+                writeX(LED[x]);
+                writeY(Filas[x]);
+          		digitalWrite(LATCH, HIGH);
+        }     
+        for(int o=0;o<8;o++){
+        		digitalWrite(LATCH, LOW);
+        		writeX(0);
+        		writeY(0);
+				digitalWrite(LATCH, HIGH);
+        		delay(100);
+      	} 
+        cont++;
+        if (cont==(duracionImagen/100)) break;
+      }
+        digitalWrite(LATCH, LOW);
+        writeX(0);
+        writeY(0);
+        digitalWrite(LATCH, HIGH);
+        break;
+  }
+  for (int i = 0; i < 8; i++) {
+    delete[] input[i];
+  }
+  delete[] input;
+}
+
+void convertToChar(unsigned short int** input, unsigned char *Filas){
+	for (int fila = 0; fila < 8; fila++) {
+    	short int valorChar = 0;
+    	unsigned short int* ptr = input[fila];
+        for (int columna = 0; columna< 8; columna++) {
+          	valorChar = (valorChar << 1) | *ptr;
+      		ptr++;
+        }
+    Filas[fila] = char(valorChar);
+  }
+}
