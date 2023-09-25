@@ -20,14 +20,14 @@ void pulse(int pin) {
   digitalWrite(pin, HIGH);
 }
 
-void writeY(unsigned char byte) {  //que leds de la columna encienden
+void writeY(unsigned char byte) {
   for (int i=0; i<8; i++) {
    	digitalWrite(inputy, (byte & (128 >> i)));
     pulse(CLKY);
   }
 }
 
-void writeX(unsigned char byte) {  //que columna enciende
+void writeX(unsigned char byte) {
   for (int i=0; i<8; i++) {
     digitalWrite(inputx, ((~byte) & (128 >> i)));
     pulse(CLKX);
@@ -116,16 +116,16 @@ void loop() {
     Serial.println("1. Opcion 1");
     Serial.println("2. Opcion 2");
     Serial.println("3. Opcion 3");
-    mostrarMenu = false; // Desactiva la visualización del menú hasta que se elija una opción
+    mostrarMenu = false;
   }
 
   if (Serial.available() > 0) {
-    opcion = Serial.read(); // Lee un carácter del puerto serial
+    opcion = Serial.read(); 
 	
     if (opcion >= '1' && opcion <= '3') {
       publik(opcion);
-      mostrarMenu = true;// Activa la visualización del menú nuevamente
-      opcion = 0; // Reinicia la opción seleccionada
+      mostrarMenu = true;
+      opcion = 0;
     } else {
       Serial.println("Opción no válida. Elija una opción del 1 al 3.");
     }
@@ -183,7 +183,7 @@ void patron2(){
         int n = 0;
         for (int i = 0; i < 8; i++) {
           unsigned char fila = 0;
-          fila = (1 << i) | (1 << (7 - i));  // Enciende los bits correspondientes en la fila
+          fila = (1 << i) | (1 << (7 - i));
           Filas[n++] = fila;
         }
         for (int x = 0; x < 8; x++) {
